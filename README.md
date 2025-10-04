@@ -1,2 +1,816 @@
-# Callculator-generator
-Ini adalah callculator generator yang berfungsi 
+ <!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Kustom Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .calculator {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 100%;
+            max-width: 320px;
+            border: 1px solid #e1e5e9;
+            transition: all 0.3s ease;
+        }
+
+        .display {
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: right;
+            padding: 20px;
+            font-size: 1.8rem;
+            min-height: 100px;
+            word-wrap: break-word;
+            word-break: break-all;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .expression {
+            font-size: 0.9rem;
+            color: #666;
+            min-height: 1.2rem;
+        }
+
+        .result {
+            font-size: 1.8rem;
+            margin-top: 10px;
+            min-height: 2.2rem;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background-color: #e1e5e9;
+        }
+
+        button {
+            border: none;
+            padding: 18px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: white;
+            color: #333;
+        }
+
+        button:hover {
+            background-color: #f0f2f5;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .operator {
+            background-color: #f0f2f5;
+            color: #4a90e2;
+        }
+
+        .operator:hover {
+            background-color: #e8eaed;
+        }
+
+        .equals {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        .equals:hover {
+            background-color: #3a7bc8;
+        }
+
+        .clear {
+            background-color: #f0f2f5;
+            color: #e74c3c;
+        }
+
+        .clear:hover {
+            background-color: #f8f9fa;
+        }
+
+        .zero {
+            grid-column: span 2;
+        }
+
+        .custom-panel {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #e1e5e9;
+        }
+
+        .custom-panel h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .custom-input {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .custom-input input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .custom-input input:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        .apply-button {
+            padding: 12px 20px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .apply-button:hover {
+            background-color: #3a7bc8;
+        }
+
+        .current-custom {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            border: 1px solid #e8e8e8;
+        }
+
+        .current-custom span {
+            font-weight: bold;
+            color: #4a90e2;
+        }
+        
+        .info-message {
+            color: #666;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        .features-panel {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #e1e5e9;
+        }
+        
+        .features-panel h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .feature-option {
+            margin-bottom: 15px;
+        }
+        
+        .feature-option label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .feature-option select, .feature-option input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .feature-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .feature-button {
+            padding: 10px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .feature-button:hover {
+            background-color: #3a7bc8;
+        }
+        
+        .history-panel {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid #e1e5e9;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .history-panel h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .history-list {
+            list-style-type: none;
+        }
+        
+        .history-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .history-expression {
+            color: #666;
+        }
+        
+        .history-result {
+            font-weight: bold;
+            color: #4a90e2;
+        }
+        
+        .credit {
+            text-align: center;
+            margin-top: 10px;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .credit span {
+            font-weight: bold;
+            color: #f1c40f;
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: 2px solid #4a90e2;
+            white-space: nowrap;
+            animation: typing 1.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #4a90e2; }
+        }
+        
+        .bounce {
+            animation: bounce 0.5s;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            80% { transform: translateY(-5px); }
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .theme-dark {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .theme-dark .display {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .theme-dark button {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .theme-dark .operator {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        .rainbow {
+            background: linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #00ff00, #00ffff, #0000ff, #9900ff);
+            background-size: 400% 400%;
+            animation: rainbow 3s ease infinite;
+            color: white;
+        }
+        
+        @keyframes rainbow {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.7;
+            animation: confetti-fall 5s linear forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="calculator" id="calculator">
+            <div class="display">
+                <div class="expression" id="expression"></div>
+                <div class="result" id="result">0</div>
+            </div>
+            <div class="buttons">
+                <button class="clear" onclick="clearDisplay()">C</button>
+                <button class="operator" onclick="deleteLast()">⌫</button>
+                <button class="operator" onclick="appendToDisplay('/')">/</button>
+                <button class="operator" onclick="appendToDisplay('*')">×</button>
+                
+                <button onclick="appendToDisplay('7')">7</button>
+                <button onclick="appendToDisplay('8')">8</button>
+                <button onclick="appendToDisplay('9')">9</button>
+                <button class="operator" onclick="appendToDisplay('-')">-</button>
+                
+                <button onclick="appendToDisplay('4')">4</button>
+                <button onclick="appendToDisplay('5')">5</button>
+                <button onclick="appendToDisplay('6')">6</button>
+                <button class="operator" onclick="appendToDisplay('+')">+</button>
+                
+                <button onclick="appendToDisplay('1')">1</button>
+                <button onclick="appendToDisplay('2')">2</button>
+                <button onclick="appendToDisplay('3')">3</button>
+                <button class="equals" onclick="calculate()" rowspan="2">=</button>
+                
+                <button class="zero" onclick="appendToDisplay('0')">0</button>
+                <button onclick="appendToDisplay('.')">.</button>
+            </div>
+        </div>
+        
+        <div class="features-panel">
+            <h3>Fitur Tambahan</h3>
+            <div class="feature-option">
+                <label for="themeSelect">Tema Kalkulator:</label>
+                <select id="themeSelect" onchange="changeTheme()">
+                    <option value="light">Tema Terang</option>
+                    <option value="dark">Tema Gelap</option>
+                    <option value="rainbow">Tema Pelangi</option>
+                </select>
+            </div>
+            <div class="feature-option">
+                <label for="effectSelect">Efek Hasil Penjumlahan:</label>
+                <select id="effectSelect" onchange="changeEffect()">
+                    <option value="normal">Normal</option>
+                    <option value="typewriter">Efek Mengetik</option>
+                    <option value="bounce">Efek Pantulan</option>
+                    <option value="blink">Efek Berkedip</option>
+                </select>
+            </div>
+            <div class="feature-option">
+                <label for="soundToggle">Suara Tombol:</label>
+                <select id="soundToggle" onchange="toggleSound()">
+                    <option value="off">Mati</option>
+                    <option value="on">Hidup</option>
+                </select>
+            </div>
+            <div class="feature-buttons">
+                <button class="feature-button" onclick="showHistory()">Riwayat</button>
+                <button class="feature-button" onclick="clearHistory()">Hapus Riwayat</button>
+                <button class="feature-button" onclick="celebrate()">Mode Pesta!</button>
+                <button class="feature-button" onclick="shareResult()">Bagikan Hasil</button>
+            </div>
+        </div>
+        
+        <div class="custom-panel">
+            <h3>Kustomisasi Hasil Kalkulator</h3>
+            <div class="custom-input">
+                <input type="text" id="customText" placeholder="Masukkan teks kustom untuk hasil penjumlahan">
+                <button class="apply-button" onclick="setCustomText()">Terapkan</button>
+            </div>
+            <div class="current-custom">
+                Teks kustom saat ini: <span id="currentCustomText">anjirr alZzz ganteng bet</span>
+            </div>
+            <div class="info-message">
+                Teks di atas akan muncul sebagai hasil dari setiap operasi penjumlahan
+            </div>
+        </div>
+        
+        <div class="history-panel" id="historyPanel" style="display: none;">
+            <h3>Riwayat Perhitungan</h3>
+            <ul class="history-list" id="historyList">
+                <!-- Riwayat akan dimasukkan di sini oleh JavaScript -->
+            </ul>
+        </div>
+        
+        <div class="credit">
+            Developed by <span>alzz</span>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('result');
+        let expressionDisplay = document.getElementById('expression');
+        let customTextInput = document.getElementById('customText');
+        let currentCustomTextDisplay = document.getElementById('currentCustomText');
+        let calculator = document.getElementById('calculator');
+        let historyPanel = document.getElementById('historyPanel');
+        let historyList = document.getElementById('historyList');
+        
+        let currentInput = '0';
+        let shouldResetDisplay = false;
+        let customText = "anjirr alZzz ganteng bet";
+        let currentEffect = 'normal';
+        let soundEnabled = false;
+        let calculationHistory = [];
+
+        // Inisialisasi audio
+        const buttonSound = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==");
+        
+        function updateDisplay() {
+            display.textContent = currentInput;
+        }
+
+        function setCustomText() {
+            const newText = customTextInput.value.trim();
+            if (newText) {
+                customText = newText;
+                currentCustomTextDisplay.textContent = customText;
+                customTextInput.value = "";
+                showNotification("Teks kustom berhasil diubah!");
+            } else {
+                showNotification("Masukkan teks terlebih dahulu!");
+            }
+        }
+
+        function appendToDisplay(value) {
+            if (soundEnabled) playButtonSound();
+            
+            if (currentInput === '0' || shouldResetDisplay) {
+                currentInput = value;
+                shouldResetDisplay = false;
+            } else {
+                currentInput += value;
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            if (soundEnabled) playButtonSound();
+            currentInput = '0';
+            expressionDisplay.textContent = '';
+            updateDisplay();
+        }
+
+        function deleteLast() {
+            if (soundEnabled) playButtonSound();
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateDisplay();
+        }
+
+        function calculate() {
+            if (soundEnabled) playButtonSound();
+            
+            try {
+                // Simpan ekspresi yang dihitung
+                let expression = currentInput;
+                
+                // Mengganti simbol × dengan * untuk evaluasi
+                let expressionForEval = expression.replace(/×/g, '*');
+                let calculatedResult = eval(expressionForEval).toString();
+                
+                // Simpan ke riwayat
+                addToHistory(expression, calculatedResult);
+                
+                // Cek apakah operasi adalah penjumlahan
+                if (expression.includes('+')) {
+                    // Tampilkan pesan kustom untuk penjumlahan
+                    expressionDisplay.textContent = expression + ' =';
+                    currentInput = customText;
+                    
+                    // Terapkan efek yang dipilih
+                    applyEffect();
+                } else {
+                    // Untuk operasi lain, tampilkan hasil normal
+                    expressionDisplay.textContent = expression + ' =';
+                    currentInput = calculatedResult;
+                }
+                
+                shouldResetDisplay = true;
+                updateDisplay();
+            } catch (error) {
+                expressionDisplay.textContent = '';
+                currentInput = 'Error';
+                updateDisplay();
+                setTimeout(() => {
+                    currentInput = '0';
+                    updateDisplay();
+                }, 1500);
+            }
+        }
+
+        function applyEffect() {
+            // Hapus semua efek sebelumnya
+            display.classList.remove('typewriter', 'bounce', 'blink');
+            
+            // Terapkan efek yang dipilih
+            if (currentEffect === 'typewriter') {
+                display.classList.add('typewriter');
+            } else if (currentEffect === 'bounce') {
+                display.classList.add('bounce');
+            } else if (currentEffect === 'blink') {
+                display.classList.add('blink');
+            }
+            
+            // Reset efek setelah beberapa saat (kecuali untuk blink yang berulang)
+            if (currentEffect !== 'blink') {
+                setTimeout(() => {
+                    display.classList.remove('typewriter', 'bounce', 'blink');
+                }, 2000);
+            }
+        }
+
+        function changeTheme() {
+            const themeSelect = document.getElementById('themeSelect');
+            const selectedTheme = themeSelect.value;
+            
+            // Hapus semua kelas tema
+            calculator.classList.remove('theme-dark', 'rainbow');
+            
+            if (selectedTheme === 'dark') {
+                calculator.classList.add('theme-dark');
+            } else if (selectedTheme === 'rainbow') {
+                calculator.classList.add('rainbow');
+            }
+        }
+
+        function changeEffect() {
+            const effectSelect = document.getElementById('effectSelect');
+            currentEffect = effectSelect.value;
+            
+            // Hapus efek yang sedang aktif
+            display.classList.remove('typewriter', 'bounce', 'blink');
+        }
+
+        function toggleSound() {
+            const soundToggle = document.getElementById('soundToggle');
+            soundEnabled = soundToggle.value === 'on';
+        }
+
+        function playButtonSound() {
+            // Membuat suara sederhana menggunakan Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.1);
+            } catch (e) {
+                console.log("Web Audio API tidak didukung di browser ini");
+            }
+        }
+
+        function addToHistory(expression, result) {
+            // Tambahkan ke awal array
+            calculationHistory.unshift({
+                expression: expression,
+                result: result,
+                timestamp: new Date().toLocaleTimeString()
+            });
+            
+            // Batasi riwayat hingga 10 item
+            if (calculationHistory.length > 10) {
+                calculationHistory.pop();
+            }
+        }
+
+        function showHistory() {
+            // Kosongkan daftar riwayat
+            historyList.innerHTML = '';
+            
+            // Tambahkan setiap item riwayat ke daftar
+            calculationHistory.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'history-item';
+                li.innerHTML = `
+                    <span class="history-expression">${item.expression} =</span>
+                    <span class="history-result">${item.result}</span>
+                `;
+                historyList.appendChild(li);
+            });
+            
+            // Tampilkan panel riwayat
+            historyPanel.style.display = 'block';
+        }
+
+        function clearHistory() {
+            calculationHistory = [];
+            historyList.innerHTML = '';
+            showNotification("Riwayat telah dihapus!");
+        }
+
+        function celebrate() {
+            // Buat efek konfeti
+            for (let i = 0; i < 50; i++) {
+                createConfetti();
+            }
+            
+            // Ubah tema menjadi rainbow sementara
+            calculator.classList.add('rainbow');
+            setTimeout(() => {
+                if (!document.getElementById('themeSelect').value === 'rainbow') {
+                    calculator.classList.remove('rainbow');
+                }
+            }, 3000);
+            
+            showNotification("Selamat! Mode pesta diaktifkan! 🎉");
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            
+            // Warna acak
+            const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff'];
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Posisi acak
+            confetti.style.left = Math.random() * 100 + 'vw';
+            
+            // Ukuran acak
+            const size = Math.random() * 10 + 5;
+            confetti.style.width = size + 'px';
+            confetti.style.height = size + 'px';
+            
+            document.body.appendChild(confetti);
+            
+            // Hapus elemen setelah animasi selesai
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Hasil Kalkulator Kustom',
+                    text: `Saya baru saja menghitung: ${expressionDisplay.textContent} ${currentInput}`,
+                    url: window.location.href
+                })
+                .then(() => showNotification('Berhasil dibagikan!'))
+                .catch(error => showNotification('Gagal berbagi: ' + error));
+            } else {
+                // Fallback untuk browser yang tidak mendukung Web Share API
+                const textToShare = `Hasil kalkulator: ${expressionDisplay.textContent} ${currentInput}`;
+                navigator.clipboard.writeText(textToShare)
+                    .then(() => showNotification('Hasil disalin ke clipboard!'))
+                    .catch(() => {
+                        // Fallback jika clipboard API tidak didukung
+                        prompt('Salin teks berikut:', textToShare);
+                        showNotification('Telah disalin!');
+                    });
+            }
+        }
+
+        function showNotification(message) {
+            // Buat elemen notifikasi
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = '#4a90e2';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.zIndex = '1000';
+            notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+            
+            document.body.appendChild(notification);
+            
+            // Hapus notifikasi setelah 3 detik
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Tambahan: Dukungan keyboard
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            if (key >= '0' && key <= '9') {
+                appendToDisplay(key);
+            } else if (key === '.') {
+                appendToDisplay('.');
+            } else if (key === '+' || key === '-' || key === '*') {
+                appendToDisplay(key);
+            } else if (key === '/') {
+                event.preventDefault();
+                appendToDisplay('/');
+            } else if (key === 'Enter' || key === '=') {
+                calculate();
+            } else if (key === 'Escape' || key === 'c' || key === 'C') {
+                clearDisplay();
+            } else if (key === 'Backspace') {
+                deleteLast();
+            } else if (key === 'h' || key === 'H') {
+                showHistory();
+            }
+        });
+
+        // Enter juga bisa digunakan untuk mengatur teks kustom
+        customTextInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                setCustomText();
+            }
+        });
+    </script>
+</body>
+</html>
